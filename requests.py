@@ -42,3 +42,18 @@ async def add_user(tg_id: int) -> None:
         await session.commit()
         await session.refresh(new_user)
         return new_user
+
+async def add_task(user_id, title):
+    async with async_session() as session:
+        new_task = Task(
+            title=title,
+            user=user_id
+        )
+        session.add(new_task)
+        await session.commit()
+
+
+async def update_task(task_id):
+    async with async_session() as session:
+        await session.execute(update(Task).where(Task.id == task_id).values(completed=True))
+        await session.commit()
